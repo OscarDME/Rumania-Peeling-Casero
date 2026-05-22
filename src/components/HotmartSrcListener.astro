@@ -1,0 +1,24 @@
+---
+// src/components/HotmartSrcListener.astro
+// Componente sin marcado: solo inyecta un script que se ejecuta al cargar.
+---
+<script is:inline>
+  (function () {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const src = params.get("src");
+      const fbclid = params.get("fbclid");
+
+      if (src) {
+        localStorage.setItem("hotmart_src", src);
+        console.log("✅ src guardado:", src);
+      }
+      if (fbclid) {
+        localStorage.setItem("hotmart_fbclid", fbclid);
+        console.log("✅ fbclid guardado:", fbclid);
+      }
+    } catch (e) {
+      console.error("HotmartSrcListener error:", e);
+    }
+  })();
+</script>

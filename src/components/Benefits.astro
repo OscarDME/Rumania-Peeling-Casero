@@ -1,0 +1,34 @@
+---
+// src/components/Benefits.astro
+import { copy } from "../lib/copy.js";
+const { benefits } = copy;
+---
+<section class="bg-cream py-16 md:py-24 px-4 md:px-6" aria-labelledby="benefits-heading">
+  <div class="mx-auto max-w-6xl">
+    <div class="text-center max-w-2xl mx-auto">
+      <p class="uppercase tracking-[0.25em] text-xs font-semibold text-brand-600 mb-3">
+        {benefits.eyebrow}
+      </p>
+      <h2 id="benefits-heading" class="text-3xl md:text-5xl font-black leading-tight text-balance text-ink">
+        {benefits.headline}
+      </h2>
+      <p class="mt-4 text-base md:text-lg text-ink/70">{benefits.subheadline}</p>
+    </div>
+
+    <ul class="mt-12 grid sm:grid-cols-2 gap-4 md:gap-6">
+      {benefits.items.map((item) => (
+        <li class="flex gap-4 p-6 rounded-2xl bg-white border border-brand-100/60 shadow-soft">
+          <div class="shrink-0 w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center">
+            <svg class="w-6 h-6 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12l5 5L20 7" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-ink">{item.title}</h3>
+            <p class="mt-1 text-sm md:text-base text-ink/70 leading-relaxed">{item.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

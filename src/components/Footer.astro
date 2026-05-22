@@ -1,0 +1,30 @@
+---
+// src/components/Footer.astro
+import { copy } from "../lib/copy.js";
+
+const { footer } = copy;
+const year = new Date().getFullYear();
+---
+<footer class="bg-ink text-white/80 py-10 md:py-14 px-4 md:px-6">
+  <div class="mx-auto max-w-6xl">
+    <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
+      <div class="text-center md:text-left">
+        <p class="text-xl font-black text-white">{footer.brand}</p>
+        <p class="mt-1 text-sm text-white/60">{footer.tagline}</p>
+      </div>
+      <ul class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+        {footer.legalLinks.map((l) => (
+          <li>
+            <a href={l.href} class="hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300 rounded">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="mt-8 pt-6 border-t border-white/10 text-center md:text-left text-xs text-white/55 space-y-2">
+      <p>© {year} {footer.brand}. {footer.rights}</p>
+      <p class="max-w-3xl mx-auto md:mx-0">{footer.disclaimer}</p>
+    </div>
+  </div>
+</footer>

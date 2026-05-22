@@ -1,0 +1,163 @@
+---
+// src/components/FinalCta.astro
+import { copy } from "../lib/copy.js";
+import { Image } from "astro:assets";
+import heroMockup from "../assets/hero-mockup.webp";
+import seloImg from "../assets/selo-garantia.webp";
+
+const { finalCta } = copy;
+
+const BASE_CHECKOUT_URL = "https://www.oriopay.app/p/exfoliant-de-casa";
+---
+<section
+  id="final-cta-section"
+  class="relative w-full bg-gradient-to-b from-cream to-brand-50/60 py-16 md:py-24 px-4 md:px-6 font-sans"
+  aria-labelledby="final-cta-heading"
+>
+  <div class="mx-auto max-w-4xl">
+    <div class="rounded-[28px] bg-white border border-brand-100 shadow-glow p-6 md:p-12 text-center">
+      <span class="inline-block bg-brand-600 text-white text-xs font-bold tracking-wider uppercase rounded-full px-4 py-1.5">
+        {finalCta.badge}
+      </span>
+
+      <h2 id="final-cta-heading" class="mt-5 text-3xl md:text-5xl font-black leading-tight text-balance text-ink">
+        {finalCta.headline}
+      </h2>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-8 items-center text-left">
+        <div class="order-2 md:order-1">
+          <p class="text-sm uppercase tracking-wider text-brand-700 font-bold mb-3">{finalCta.bundleHeadline}</p>
+          <ul class="space-y-3">
+            {finalCta.bundleList.map((item) => (
+              <li class="flex gap-3 text-[15px] md:text-base text-ink/80">
+                <svg class="shrink-0 w-5 h-5 mt-0.5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 12l5 5L20 7" />
+                </svg>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="order-1 md:order-2 text-center">
+          <Image
+            src={heroMockup}
+            alt={finalCta.imageAlt}
+            widths={[320, 480, 640]}
+            sizes="(min-width: 768px) 360px, 70vw"
+            formats={['avif', 'webp']}
+            quality={82}
+            loading="lazy"
+            class="w-full max-w-xs mx-auto h-auto drop-shadow-2xl"
+          />
+        </div>
+      </div>
+
+      <div class="mt-10 rounded-3xl bg-brand-50/70 border border-brand-100 p-6 md:p-8">
+        <p class="text-sm text-ink/70 font-medium">
+          {finalCta.regularPriceLabel} <span class="line-through">{finalCta.regularPrice}</span>
+        </p>
+        <p class="mt-1 text-xs uppercase tracking-wider text-brand-600 font-bold">{finalCta.offerLabel}</p>
+        <p class="mt-1 text-6xl md:text-7xl font-black text-brand-700 tracking-tighter leading-none">
+          {finalCta.offerPrice}
+        </p>
+        <p class="mt-2 text-sm text-ink/70">{finalCta.installments}</p>
+        <span class="mt-3 inline-block bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wide rounded-full px-3 py-1">
+          {finalCta.economy}
+        </span>
+      </div>
+
+      <a
+        id="final-cta-button"
+        href={BASE_CHECKOUT_URL}
+        data-base-url={BASE_CHECKOUT_URL}
+        data-offer-price={finalCta.offerPrice}
+        class="mt-8 inline-flex items-center justify-center bg-brand-600 hover:bg-brand-700 text-white font-bold py-5 md:py-6 px-6 md:px-10 rounded-2xl shadow-glow text-base md:text-lg uppercase tracking-wide w-full md:w-auto border-b-4 border-brand-800 transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand-300"
+      >
+        {finalCta.button}
+        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7" />
+        </svg>
+      </a>
+      <p class="mt-4 text-xs text-ink/60">{finalCta.urgencyText}</p>
+      <p class="mt-1 text-xs text-ink/60">{finalCta.secureNote}</p>
+
+      <div class="mt-10 flex flex-col md:flex-row items-center gap-5 md:gap-6 text-left rounded-3xl bg-emerald-50/60 border border-emerald-100 p-6 md:p-7">
+        <Image
+          src={seloImg}
+          alt={finalCta.guaranteeImageAlt}
+          widths={[160, 240]}
+          sizes="160px"
+          formats={['avif', 'webp']}
+          quality={82}
+          loading="lazy"
+          class="w-28 h-28 md:w-32 md:h-32 object-contain shrink-0"
+        />
+        <p class="text-[15px] md:text-base text-ink/80 leading-relaxed">
+          {finalCta.guaranteeText}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const button = document.getElementById("final-cta-button");
+  if (button) {
+    const BASE_CHECKOUT_URL = button.dataset.baseUrl;
+    const offerPrice = button.dataset.offerPrice || "";
+    let checkoutUrl = BASE_CHECKOUT_URL;
+
+    try {
+      const params = new URLSearchParams(window.location.search);
+      let src = params.get("src");
+      let fbclid = params.get("fbclid");
+
+      if (!src) src = localStorage.getItem("hotmart_src");
+      if (!fbclid) fbclid = localStorage.getItem("hotmart_fbclid");
+
+      if (src || fbclid) {
+        const urlObj = new URL(BASE_CHECKOUT_URL);
+        if (src) {
+          urlObj.searchParams.set("src", src);
+          console.log("🔗 FinalCTA: src ->", src);
+        }
+        if (fbclid) {
+          urlObj.searchParams.set("fbclid", fbclid);
+          console.log("🔗 FinalCTA: fbclid ->", fbclid);
+        }
+        checkoutUrl = urlObj.toString();
+        button.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error("Error construyendo URL:", error);
+    }
+
+    button.addEventListener("click", () => {
+      try {
+        let priceNum = 0;
+        if (offerPrice) {
+          const cleaned = String(offerPrice).replace(/[^\d.,]/g, "").replace(",", ".");
+          const parsed = parseFloat(cleaned);
+          if (Number.isFinite(parsed)) priceNum = parsed;
+        }
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "begin_checkout",
+          value: priceNum,
+          currency: "BRL",
+          items: [
+            {
+              item_id: "peeling_anti_idade_cta",
+              item_name: "Peeling Caseiro Anti-Idade",
+              price: priceNum,
+            },
+          ],
+        });
+        console.log("[FinalCTA] begin_checkout ✅");
+      } catch (err) {
+        console.error("[FinalCTA] Error analytics:", err);
+      }
+    });
+  }
+</script>

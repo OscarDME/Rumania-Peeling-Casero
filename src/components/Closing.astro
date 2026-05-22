@@ -1,0 +1,87 @@
+---
+// src/components/Closing.astro
+import { copy } from "../lib/copy.js";
+
+const { closing } = copy;
+const BASE_CHECKOUT_URL = "https://www.oriopay.app/p/exfoliant-de-casa";
+---
+<section class="bg-gradient-to-b from-brand-700 to-brand-800 text-white py-16 md:py-24 px-4 md:px-6" aria-labelledby="closing-heading">
+  <div class="mx-auto max-w-3xl text-center">
+    <p class="uppercase tracking-[0.3em] text-xs font-semibold text-brand-100 mb-4">
+      {closing.eyebrow}
+    </p>
+    <h2 id="closing-heading" class="text-3xl md:text-5xl font-black leading-tight text-balance">
+      {closing.headline}
+    </h2>
+    <p class="mt-5 text-base md:text-lg text-brand-50/90 leading-relaxed">
+      {closing.body}
+    </p>
+
+    {/* Timer */}
+    <div class="mt-8 inline-flex items-center gap-3 bg-white/10 backdrop-blur rounded-2xl px-5 py-3 border border-white/15">
+      <span class="text-[11px] uppercase tracking-wider text-brand-100 font-semibold">{closing.timerNote}</span>
+      <div id="closing-timer" class="flex items-center gap-2 font-mono font-bold text-white text-base md:text-lg" aria-live="polite">
+        <span data-unit="hours">00</span><span>:</span>
+        <span data-unit="minutes">00</span><span>:</span>
+        <span data-unit="seconds">00</span>
+      </div>
+    </div>
+
+    <div class="mt-8">
+      <a
+        id="closing-cta-button"
+        href={BASE_CHECKOUT_URL}
+        data-base-url={BASE_CHECKOUT_URL}
+        class="inline-flex items-center justify-center bg-white text-brand-700 hover:bg-brand-50 font-bold py-5 px-8 md:px-12 rounded-2xl shadow-xl text-base md:text-lg uppercase tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40"
+      >
+        {closing.cta}
+        <svg class="ml-2 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M13 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const timer = document.getElementById("closing-timer");
+    if (timer) {
+      const pad = (n) => String(n).padStart(2, "0");
+      const target = new Date();
+      target.setHours(23, 59, 59, 999);
+      function tick() {
+        const now = new Date();
+        let diff = Math.max(0, target.getTime() - now.getTime());
+        const h = Math.floor(diff / 3600000); diff %= 3600000;
+        const m = Math.floor(diff / 60000); diff %= 60000;
+        const s = Math.floor(diff / 1000);
+        timer.querySelector('[data-unit="hours"]').textContent = pad(h);
+        timer.querySelector('[data-unit="minutes"]').textContent = pad(m);
+        timer.querySelector('[data-unit="seconds"]').textContent = pad(s);
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    const button = document.getElementById("closing-cta-button");
+    if (button) {
+      const BASE_CHECKOUT_URL = button.dataset.baseUrl;
+      try {
+        const params = new URLSearchParams(window.location.search);
+        let src = params.get("src");
+        let fbclid = params.get("fbclid");
+        if (!src) src = localStorage.getItem("hotmart_src");
+        if (!fbclid) fbclid = localStorage.getItem("hotmart_fbclid");
+        if (src || fbclid) {
+          const urlObj = new URL(BASE_CHECKOUT_URL);
+          if (src) urlObj.searchParams.set("src", src);
+          if (fbclid) urlObj.searchParams.set("fbclid", fbclid);
+          button.href = urlObj.toString();
+        }
+      } catch (e) {
+        console.error("Closing CTA URL error:", e);
+      }
+    }
+  })();
+</script>
